@@ -1,8 +1,9 @@
 class CartRemoveButton extends HTMLElement {
   constructor() {
     super();
-    this.bundleId = document.querySelector("#customCartId").dataset.bundleId;
-    this.itemId = document.querySelector("#customCartId").dataset.itemId;
+    this.bundleId = this.dataset.bundleId;
+    this.itemId = this.dataset.itemId;
+    console.log(this.bundleId,this.itemId)
     this.addEventListener('click', (event) => {
       event.preventDefault();
       const cartItems = this.closest('cart-items') || this.closest('cart-drawer-items');
@@ -110,7 +111,7 @@ class CartItems extends HTMLElement {
   updateQuantity(line,bundle, quantity, name, variantId) {
     this.enableLoading(line);
     let updates = {}
-    if(bundle.length){
+    if(bundle && bundle.length){
       updates[bundle] = quantity
     }
     updates[line] = quantity
