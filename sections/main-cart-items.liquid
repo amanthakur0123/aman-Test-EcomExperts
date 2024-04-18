@@ -79,7 +79,7 @@
 
               <tbody>
                 {%- for item in cart.items -%}
-                  <tr class="cart-item" id="CartItem-{{ item.index | plus: 1 }}">
+                  <tr class="cart-item" id="CartItem-{{ item.index | plus: 1 }}" >
                     <td class="cart-item__media">
                       {% if item.image %}
                         {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
@@ -140,8 +140,10 @@
                           {%- endif -%}
 
                           {%- for property in item.properties -%}
+                            <input hidden id="customCartId" data-item-id={{ item.variant_id }} data-bundle-id={{ property.last }} >
                             {%- assign property_first_char = property.first | slice: 0 -%}
-                            {%- if property.last != blank and property_first_char != '_' -%}
+                            {% unless property.first contains "bundleId" %}
+                              {%- if property.last != blank and property_first_char != '_' -%}
                               <div class="product-option">
                                 <dt>{{ property.first }}:</dt>
                                 <dd>
@@ -155,6 +157,7 @@
                                 </dd>
                               </div>
                             {%- endif -%}
+                              {% endunless %}
                           {%- endfor -%}
                         </dl>
 
@@ -273,6 +276,7 @@
                               </button>
                             </quantity-input>
                           </div>
+                          
                           <cart-remove-button
                             id="Remove-{{ item.index | plus: 1 }}"
                             data-index="{{ item.index | plus: 1 }}"

@@ -39,9 +39,55 @@ if (!customElements.get('product-form')) {
           formData.append('sections_url', window.location.pathname);
           this.cart.setActiveElement(document.activeElement);
         }
-        config.body = formData;
+         const bundleProductId = document.querySelector("#data-bundle-id").dataset.bundleId;
+        const VariantIds = [];
 
-        fetch(`${routes.cart_add_url}`, config)
+        if(bundleProductId.length){
+          VariantIds.push({
+            "id": parseInt(bundleProductId),
+            "quantity": 1,
+          });
+        }
+
+
+        if (VariantIds.length > 0) {
+            const bundleData = {
+               items: [],
+            };
+          
+            const variantId = formData.get('id');
+            const quantity = formData.get('quantity');
+        
+            bundleData.items.push({
+                "id": parseInt(variantId),
+                "quantity": parseInt(quantity),
+              "properties":{
+                "bundleId":parseInt(bundleProductId)
+              }
+            });
+        
+            bundleData.items.push(...VariantIds);
+        
+            if (this.cart) {
+                bundleData["sections"] = this.cart.getSectionsToRender().map((section) => section.id);
+                bundleData["sections_url"] = window.location.pathname;
+                this.cart.setActiveElement(document.activeElement);
+            }
+          config.body = JSON.stringify(bundleData)
+          config.headers['Content-Type'] = "application/json"
+        } else {
+            if (this.cart) {
+              formData.append(
+                'sections',
+                this.cart.getSectionsToRender().map((section) => section.id)
+              );
+              formData.append('sections_url', window.location.pathname);
+              this.cart.setActiveElement(document.activeElement);
+            }
+            config.body = formData;
+        }
+
+         fetch(`${routes.cart_add_url}`, config)
           .then((response) => response.json())
           .then((response) => {
             if (response.status) {

@@ -1044,6 +1044,7 @@ class VariantSelects extends HTMLElement {
     const productForms = document.querySelectorAll(
       `#product-form-${this.dataset.section}, #product-form-installment-${this.dataset.section}`
     );
+    console.log(productForms)
     productForms.forEach((productForm) => {
       const input = productForm.querySelector('input[name="id"]');
       input.value = this.currentVariant.id;
@@ -1117,6 +1118,12 @@ class VariantSelects extends HTMLElement {
         if (this.currentVariant.id !== requestedVariantId) return;
 
         const html = new DOMParser().parseFromString(responseText, 'text/html');
+
+        const bundleDestination = html.getElementById("data-bundle-id");
+        document.getElementById("data-bundle-id").dataset.bundleId = bundleDestination.dataset.bundleId
+        console.log(bundleDestination)
+
+        
         const destination = document.getElementById(`price-${this.dataset.section}`);
         const source = html.getElementById(
           `price-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`

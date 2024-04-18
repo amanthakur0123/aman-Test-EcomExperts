@@ -78,6 +78,7 @@
           data-url="{{ product.url }}"
           class="product__info-container{% if section.settings.enable_sticky_info %} product__column-sticky{% endif %}"
         >
+          <input type="hidden" id="data-bundle-id"   data-bundle-id="{{ product.selected_or_first_available_variant.metafields.custom.bundle_item.value.selected_or_first_available_variant.id }}">
           {%- assign product_form_id = 'product-form-' | append: section.id -%}
 
           {%- for block in section.blocks -%}
